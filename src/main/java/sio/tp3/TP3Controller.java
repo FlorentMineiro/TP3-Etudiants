@@ -85,6 +85,8 @@ public class TP3Controller implements Initializable {
 
             Tache tacheInfo = new Tache(nomTache, nomDeveloppeur, estTerminée);
 
+
+
             if (!(mesTaches.containsKey(nomTheme))) {
                 mesTaches.put(nomTheme, new HashMap<>());
                 mesTaches.get(nomTheme).put(nomProjets, new ArrayList<>());
@@ -99,6 +101,8 @@ public class TP3Controller implements Initializable {
 
             noeudTheme = new TreeItem<>(nomTheme);
             HashMap<String, ArrayList<Tache>> mesProjets = mesTaches.get(nomTheme);
+
+
 
             for (String lesProjets : mesProjets.keySet()) {
                 noeudProjets = new TreeItem<>(lesProjets);
@@ -116,13 +120,30 @@ public class TP3Controller implements Initializable {
             }
 
             racine.getChildren().add(noeudTheme);
+
+            if (selectThemes(nomTheme,nomProjets))
+            {
+                Alert alert2 = new Alert(Alert.AlertType.CONFIRMATION);
+                alert2.setTitle("Nouvelles tache");
+                alert2.setHeaderText(nomDeveloppeur+" fait :"+nomTache);
+                alert2.showAndWait();
+               /* ArrayList<Tache> maTache = mesProjets.get(nomProjets);
+                for (Tache tacheEnCours : maTache) {
+                    noeudTaches = new TreeItem<>(cboDeveloppeurs.getSelectionModel().getSelectedItem() + " : " + nomTache + " : " + tacheEnCours.isEstTerminee());
+                    noeudProjets.getChildren().add(noeudTaches);
+                    compteurTache++;
+                }*/
+
+            }
+
+
         }
 
     }
-    public boolean selectThemes()
+    public boolean selectThemes(String theme,String projet)
     {
         boolean selection = false;
-        if (!(lstThemes.getSelectionModel().getSelectedItem() == null))
+        if (mesTaches.containsKey(theme) &&mesTaches.get(theme).containsKey(projet) )
         {
             selection = true;
         }
