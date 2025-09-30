@@ -1,6 +1,8 @@
 package sio.tp3;
 
 import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +32,9 @@ public class TP3Controller implements Initializable {
     private Button cmdValider;
     @FXML
     private TextField txtNomTache;
+    TreeItem noeudTheme;
+    TreeItem noeudProjets;
+    TreeItem noeudTaches;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -93,10 +98,11 @@ public class TP3Controller implements Initializable {
 
             }
             mesTaches.get(nomTheme).get(nomProjets).add(tacheInfo);
-            TreeItem noeudTheme;
-            TreeItem noeudProjets;
-            TreeItem noeudTaches;
+
             int compteurTache = 1;
+
+
+
 
 
             noeudTheme = new TreeItem<>(nomTheme);
@@ -110,9 +116,16 @@ public class TP3Controller implements Initializable {
 
 
                 for (Tache tacheEnCours : maTache) {
-                    noeudTaches = new TreeItem<>(cboDeveloppeurs.getSelectionModel().getSelectedItem() + " : " + nomTache + " : " + tacheEnCours.isEstTerminee());
-                    noeudProjets.getChildren().add(noeudTaches);
-                    compteurTache++;
+
+
+                        noeudTaches = new TreeItem<>(cboDeveloppeurs.getSelectionModel().getSelectedItem() + " : " + nomTache + " : " + tacheEnCours.isEstTerminee());
+
+                        noeudProjets.getChildren().add(noeudTaches);
+                        if (mesTaches.containsKey(nomProjets) && mesTaches.containsKey(nomTheme) )
+                        {
+                            ajoutTacheDansTreeView(nomTheme,nomProjets);
+                        }
+                            compteurTache++;
                 }
 
                 noeudTheme.getChildren().add(noeudProjets);
@@ -121,34 +134,48 @@ public class TP3Controller implements Initializable {
 
             racine.getChildren().add(noeudTheme);
 
-            if (selectThemes(nomTheme,nomProjets))
-            {
-                Alert alert2 = new Alert(Alert.AlertType.CONFIRMATION);
-                alert2.setTitle("Nouvelles tache");
-                alert2.setHeaderText(nomDeveloppeur+" fait :"+nomTache);
-                alert2.showAndWait();
-               /* ArrayList<Tache> maTache = mesProjets.get(nomProjets);
-                for (Tache tacheEnCours : maTache) {
-                    noeudTaches = new TreeItem<>(cboDeveloppeurs.getSelectionModel().getSelectedItem() + " : " + nomTache + " : " + tacheEnCours.isEstTerminee());
-                    noeudProjets.getChildren().add(noeudTaches);
-                    compteurTache++;
-                }*/
 
-            }
 
 
         }
 
     }
-    public boolean selectThemes(String theme,String projet)
+    public void ajoutTacheDansTreeView(String theme,String projet)
     {
-        boolean selection = false;
-        if (mesTaches.containsKey(theme) &&mesTaches.get(theme).containsKey(projet) )
+        TreeItem noeudThemeExistant = null;
+        TreeItem noeudProjetExistant = null;
+
+        ObservableList<TreeItem> ajoutTaches = racine.getChildren();
+
+        for (TreeItem itemTheme : ajoutTaches)
         {
-            selection = true;
+            if(itemTheme.getValue().equals(theme)){
+                    noeudThemeExistant = itemTheme;
+
+            }
         }
 
-        return selection;
+        if (noeudThemeExistant == null)
+        {
+            noeudThemeExistant = new TreeItem<>(theme);
+            ajoutTaches.add(noeudThemeExistant);
+        }
+        for (TreeItem itemProjet : ajoutTaches)
+        {
+            if(itemProjet.getValue().equals(projet)){
+                noeudProjetExistant = itemProjet;
+
+            }
+        }
+
+        if (noeudProjetExistant == null)
+        {
+            noeudProjetExistant = new TreeItem<>(projet);
+            ajoutTaches.add(noeudProjetExistant);
+        }
+
+
+
     }
 
     @FXML
