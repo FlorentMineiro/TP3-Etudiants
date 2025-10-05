@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 public class TP3Controller implements Initializable {
     private HashMap<String, HashMap<String, ArrayList<Tache>>> mesTaches;
-    TreeItem racine;
+    TreeItem<String> racine;
     @FXML
     private ListView lstThemes;
     @FXML
@@ -91,21 +91,21 @@ public class TP3Controller implements Initializable {
             Tache tacheInfo = new Tache(nomTache, nomDeveloppeur, estTerminée);
 
 
-
             if (!(mesTaches.containsKey(nomTheme))) {
                 mesTaches.put(nomTheme, new HashMap<>());
                 mesTaches.get(nomTheme).put(nomProjets, new ArrayList<>());
 
             }
             mesTaches.get(nomTheme).get(nomProjets).add(tacheInfo);
-
-            int compteurTache = 1;
-
+            ajoutTacheDansTreeView(nomTheme, nomProjets, tacheInfo);
 
 
 
 
-            noeudTheme = new TreeItem<>(nomTheme);
+
+
+
+            /*noeudTheme = new TreeItem<>(nomTheme);
             HashMap<String, ArrayList<Tache>> mesProjets = mesTaches.get(nomTheme);
 
 
@@ -121,10 +121,8 @@ public class TP3Controller implements Initializable {
                         noeudTaches = new TreeItem<>(cboDeveloppeurs.getSelectionModel().getSelectedItem() + " : " + nomTache + " : " + tacheEnCours.isEstTerminee());
 
                         noeudProjets.getChildren().add(noeudTaches);
-                        if (mesTaches.containsKey(nomProjets) && mesTaches.containsKey(nomTheme) )
-                        {
-                            ajoutTacheDansTreeView(nomTheme,nomProjets);
-                        }
+
+
                             compteurTache++;
                 }
 
@@ -132,22 +130,24 @@ public class TP3Controller implements Initializable {
 
             }
 
+
             racine.getChildren().add(noeudTheme);
 
 
 
 
+        }*/
         }
-
     }
-    public void ajoutTacheDansTreeView(String theme,String projet)
+    public void ajoutTacheDansTreeView(String theme,String projet,Tache tache)
     {
-        TreeItem noeudThemeExistant = null;
-        TreeItem noeudProjetExistant = null;
+        TreeItem<String> noeudThemeExistant = null;
+        TreeItem<String> noeudProjetExistant = null;
 
-        ObservableList<TreeItem> ajoutTaches = racine.getChildren();
+       // ObservableList<TreeItem> ajoutTachesDansTheme = racine.getChildren();
 
-        for (TreeItem itemTheme : ajoutTaches)
+
+        for (TreeItem<String> itemTheme : racine.getChildren())
         {
             if(itemTheme.getValue().equals(theme)){
                     noeudThemeExistant = itemTheme;
@@ -158,9 +158,9 @@ public class TP3Controller implements Initializable {
         if (noeudThemeExistant == null)
         {
             noeudThemeExistant = new TreeItem<>(theme);
-            ajoutTaches.add(noeudThemeExistant);
+            racine.getChildren().add(noeudThemeExistant);
         }
-        for (TreeItem itemProjet : ajoutTaches)
+        for (TreeItem itemProjet : noeudThemeExistant.getChildren())
         {
             if(itemProjet.getValue().equals(projet)){
                 noeudProjetExistant = itemProjet;
@@ -171,11 +171,12 @@ public class TP3Controller implements Initializable {
         if (noeudProjetExistant == null)
         {
             noeudProjetExistant = new TreeItem<>(projet);
-            ajoutTaches.add(noeudProjetExistant);
+            noeudThemeExistant.getChildren().add(noeudProjetExistant);
         }
 
-
-
+        String libelleTache = cboDeveloppeurs.getSelectionModel().getSelectedItem().toString() + " : "+tache.getNomTache()+" : "+ tache.isEstTerminee();
+        TreeItem noeudTache = new TreeItem<>(libelleTache);
+        noeudProjetExistant.getChildren().add(noeudTache);
     }
 
     @FXML
