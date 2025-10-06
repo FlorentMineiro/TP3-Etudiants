@@ -32,9 +32,9 @@ public class TP3Controller implements Initializable {
     private Button cmdValider;
     @FXML
     private TextField txtNomTache;
-    TreeItem noeudTheme;
-    TreeItem noeudProjets;
-    TreeItem noeudTaches;
+    TreeItem<String> noeudThemeExistant ;
+    TreeItem<String> noeudProjetExistant;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -99,50 +99,12 @@ public class TP3Controller implements Initializable {
             mesTaches.get(nomTheme).get(nomProjets).add(tacheInfo);
             ajoutTacheDansTreeView(nomTheme, nomProjets, tacheInfo);
 
-
-
-
-
-
-
-            /*noeudTheme = new TreeItem<>(nomTheme);
-            HashMap<String, ArrayList<Tache>> mesProjets = mesTaches.get(nomTheme);
-
-
-
-            for (String lesProjets : mesProjets.keySet()) {
-                noeudProjets = new TreeItem<>(lesProjets);
-                ArrayList<Tache> maTache = mesProjets.get(nomProjets);
-
-
-                for (Tache tacheEnCours : maTache) {
-
-
-                        noeudTaches = new TreeItem<>(cboDeveloppeurs.getSelectionModel().getSelectedItem() + " : " + nomTache + " : " + tacheEnCours.isEstTerminee());
-
-                        noeudProjets.getChildren().add(noeudTaches);
-
-
-                            compteurTache++;
-                }
-
-                noeudTheme.getChildren().add(noeudProjets);
-
-            }
-
-
-            racine.getChildren().add(noeudTheme);
-
-
-
-
-        }*/
         }
     }
     public void ajoutTacheDansTreeView(String theme,String projet,Tache tache)
     {
-        TreeItem<String> noeudThemeExistant = null;
-        TreeItem<String> noeudProjetExistant = null;
+        noeudThemeExistant = null;
+        noeudProjetExistant = null;
 
        // ObservableList<TreeItem> ajoutTachesDansTheme = racine.getChildren();
 
@@ -182,6 +144,34 @@ public class TP3Controller implements Initializable {
     @FXML
     public void tvTachesClicked(Event event)
     {
+        Tache tacheTerminee = new Tache(txtNomTache.getText(), cboDeveloppeurs.getSelectionModel().getSelectedItem().toString(), false);
+
+
+        TreeItem<String> noeudTache = new TreeItem<String>(cboDeveloppeurs.getSelectionModel().getSelectedItem().toString()+" : "+tacheTerminee.getNomTache()+" : "+tacheTerminee.isEstTerminee());
+        String theme = noeudThemeExistant.getValue();
+        String projet = noeudProjetExistant.getValue();
+
+
+        if (mesTaches.get(theme).get(projet).contains(noeudTache))
+        {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Tâche Terminée");
+            alert.showAndWait();
+
+            tacheTerminee.setEstTerminee(true);
+
+            noeudTache = new TreeItem<String>(cboDeveloppeurs.getSelectionModel().getSelectedItem().toString()+" : "+tacheTerminee.getNomTache()+" : "+tacheTerminee.isEstTerminee());
+
+            noeudProjetExistant.getChildren().add(noeudTache);
+        }
+
+
+
+
+
+
+
+
 
     }
 }

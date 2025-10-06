@@ -13,6 +13,14 @@ public class Tache
         this.estTerminee = estTerminee;
     }
 
+    public void setNomTache(String nomTache) {
+        this.nomTache = nomTache;
+    }
+
+    public void setNomDeveloppeur(String nomDeveloppeur) {
+        this.nomDeveloppeur = nomDeveloppeur;
+    }
+
     public void setEstTerminee(boolean estTerminee) {
         this.estTerminee = estTerminee;
     }
